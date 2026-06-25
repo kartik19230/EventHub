@@ -1,13 +1,11 @@
 package com.eventhub.event.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.eventhub.event.enums.EventStatus;
-import com.eventhub.registration.entity.EventRegistration;
 import com.eventhub.user.entity.User;
 
 import jakarta.persistence.Entity;
