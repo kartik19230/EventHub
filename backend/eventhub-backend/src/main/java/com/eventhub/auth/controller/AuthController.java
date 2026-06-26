@@ -2,20 +2,23 @@ package com.eventhub.auth.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.eventhub.auth.dto.AuthResponeDTO;
+import com.eventhub.auth.dto.AuthResponseDTO;
+import com.eventhub.auth.dto.LoginDTO;
 import com.eventhub.auth.dto.RegisterDTO;
 import com.eventhub.auth.service.AuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
@@ -23,11 +26,29 @@ public class AuthController {
 	private final AuthService service;
 	
 	@PostMapping("/register")
-	public ResponseEntity<AuthResponeDTO> register (@Valid @RequestBody RegisterDTO dto,BindingResult result) {
+	public ResponseEntity<AuthResponseDTO> register (@Valid @RequestBody RegisterDTO dto)	 {
 		
-		AuthResponeDTO response = service.findUserByEmail(dto);
+		AuthResponseDTO response = service.registerUser(dto);
 	
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDTO dto,HttpServletRequest request){
+		
+		AuthResponseDTO response = service.loginUser(request,dto);
+		
+		return ResponseEntity.status(HttpStatus.OK	)
+								.body(response);
+	}
+	
+	@GetMapping("/me")
+	public String profile(Authentication authentication){
+		
+		if (authentication == null) {
+			return "authentication is null";
+		}
+	    return authentication.getName();
 	}
 
 }
