@@ -1,4 +1,4 @@
-package com.eventhub.auth.service;
+package com.eventhub.auth.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

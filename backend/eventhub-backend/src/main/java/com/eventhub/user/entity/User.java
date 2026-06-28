@@ -1,12 +1,10 @@
 package com.eventhub.user.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.eventhub.registration.entity.EventRegistration;
 import com.eventhub.user.enums.Role;
 
 import jakarta.persistence.Column;
@@ -21,7 +19,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity

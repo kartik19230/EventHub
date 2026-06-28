@@ -23,12 +23,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 	
-	private final AuthService service;
+	private final AuthService authService;
 	
 	@PostMapping("/register")
 	public ResponseEntity<AuthResponseDTO> register (@Valid @RequestBody RegisterDTO dto)	 {
 		
-		AuthResponseDTO response = service.registerUser(dto);
+		AuthResponseDTO response = authService.registerUser(dto);
 	
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
@@ -36,7 +36,7 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDTO dto,HttpServletRequest request){
 		
-		AuthResponseDTO response = service.loginUser(request,dto);
+		AuthResponseDTO response = authService.loginUser(request,dto);
 		
 		return ResponseEntity.status(HttpStatus.OK	)
 								.body(response);
