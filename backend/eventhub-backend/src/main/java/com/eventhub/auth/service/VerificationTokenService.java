@@ -1,7 +1,6 @@
 package com.eventhub.auth.service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +9,7 @@ import com.eventhub.auth.entity.VerificationToken;
 import com.eventhub.auth.exception.InvalidVerificationTokenException;
 import com.eventhub.auth.exception.VerificationTokenExpiredException;
 import com.eventhub.auth.repository.VerificationTokenRepository;
+import com.eventhub.common.exception.ResourceNotFoundException;
 import com.eventhub.user.entity.User;
 
 import jakarta.transaction.Transactional;
@@ -58,5 +58,17 @@ public class VerificationTokenService {
 		}
 
 		return verificationToken;
+	}
+	
+	@Transactional
+	public VerificationToken regenerateVerificationToken(User user) {
+		
+		VerificationToken token = verificationTokenRepo.findByUser(user)
+				.orElseThrow(() -> new ResourceNotFoundException("Token not found"));
+		
+		token.setToken(UUID.randomUUID().toString());
+		token.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+		
+		return verificationTokenRepo.save(token);
 	}
 }

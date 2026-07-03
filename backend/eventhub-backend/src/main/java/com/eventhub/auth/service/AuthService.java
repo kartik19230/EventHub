@@ -1,8 +1,6 @@
 package com.eventhub.auth.service;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,12 +10,14 @@ import org.springframework.stereotype.Service;
 import com.eventhub.auth.dto.AuthResponseDTO;
 import com.eventhub.auth.dto.LoginDTO;
 import com.eventhub.auth.dto.RegisterDTO;
+import com.eventhub.auth.dto.ResendVerificationDTO;
 import com.eventhub.auth.entity.VerificationToken;
 import com.eventhub.auth.event.UserRegistrationEvent;
-import com.eventhub.auth.exception.InvalidVerificationTokenException;
+import com.eventhub.auth.exception.UserAlreadyVerifiedException;
 import com.eventhub.auth.mapper.AuthMapper;
 import com.eventhub.auth.security.SecurityContextService;
 import com.eventhub.common.exception.UserAlreadyExistException;
+import com.eventhub.common.exception.UserNotFoundException;
 import com.eventhub.user.entity.User;
 import com.eventhub.user.enums.Role;
 import com.eventhub.user.repository.UserRepository;
@@ -56,7 +56,7 @@ public class AuthService {
 		
 		VerificationToken token = verificationTokenService.createVerificationToken(user);
 		
-		eventPublisher.publishEvent(new UserRegistrationEvent(dto.email(),dto.username(),
+		eventPublisher.publishEvent(new UserRegistrationEvent(registeredUser.getEmail(),dto.username(),
 				token.getToken()));
 		
 		return new AuthResponseDTO("User saved");
@@ -86,5 +86,22 @@ public class AuthService {
 		verificationTokenService.deleteVerificationToken(user);
 		
 		return new AuthResponseDTO("Email Verified Successfully");
+	}
+
+	@Transactional
+	public AuthResponseDTO resendVerificationToken(ResendVerificationDTO dto) {
+		 
+		User user = userRepo.findByEmail(dto.getEmail())
+				.orElseThrow(() -> new UserNotFoundException("User not found"));
+		
+		if (user.getIsEmailVerified()) {
+			throw new UserAlreadyVerifiedException("User Already Verified");
+		}
+		
+		VerificationToken token = verificationTokenService.regenerateVerificationToken(user);
+		
+		eventPublisher.publishEvent(new UserRegistrationEvent(user.getEmail(), user.getUsername(), token.getToken()));
+		
+		return new AuthResponseDTO("Token Resended Successfully");
 	}
 }

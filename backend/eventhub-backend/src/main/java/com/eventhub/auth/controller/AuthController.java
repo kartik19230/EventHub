@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eventhub.auth.dto.AuthResponseDTO;
 import com.eventhub.auth.dto.LoginDTO;
 import com.eventhub.auth.dto.RegisterDTO;
+import com.eventhub.auth.dto.ResendVerificationDTO;
 import com.eventhub.auth.service.AuthService;
 
 import jakarta.mail.MessagingException;
@@ -48,6 +49,15 @@ public class AuthController {
 
 		AuthResponseDTO response = authService.verifyUser(token);
 
+		return ResponseEntity.ok(response);
+	}
+	
+	@PostMapping("/resend-verification")
+	public ResponseEntity<AuthResponseDTO> resendVerificationToken(@RequestBody ResendVerificationDTO dto){
+		
+		System.out.println("API triggered");
+		AuthResponseDTO response = authService.resendVerificationToken(dto);
+		
 		return ResponseEntity.ok(response);
 	}
 
