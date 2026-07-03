@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Service
-public class SessionContextService {
+public class SecurityContextService {
 
 	
 	public void establishAuthenticationSession(Authentication authentication,

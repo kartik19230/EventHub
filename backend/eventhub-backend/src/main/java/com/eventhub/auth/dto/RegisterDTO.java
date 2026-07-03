@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import lombok.Data;
 
 @Builder
 public record RegisterDTO(
@@ -19,12 +20,5 @@ public record RegisterDTO(
 		
 		@NotBlank(message = "Password is required")
 		@Size(min = 6,max = 30, message = "Password must be between 6 to 30 characters")
-		String password,
-		
-		@NotBlank(message = "Role Can't be blank")
-		@Pattern(
-				regexp = "ADMIN|ATTENDEE|ORGANIZER",
-				message = "Invalid Role"
-				)
-		String role
+		String password
 		) {}

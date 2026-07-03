@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.print.DocFlavor.READER;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.eventhub.auth.dto.AuthResponseDTO;
+import com.eventhub.auth.exception.InvalidVerificationTokenException;
+import com.eventhub.auth.exception.VerificationTokenExpiredException;
+
+import jakarta.mail.MessagingException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -56,6 +62,27 @@ public class GlobalExceptionHandler {
 		
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 							 .body(new AuthResponseDTO("Invalid email or password"));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<AuthResponseDTO> handleMessagingException(MessagingException ex){
+		
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+							 .body(new AuthResponseDTO("Failed to send verification email"));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<AuthResponseDTO> handleInvalidVerificationExcpetion(InvalidVerificationTokenException ex){
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+							 .body(new AuthResponseDTO(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<AuthResponseDTO> handleVerificationTokenExpiredException(VerificationTokenExpiredException ex){
+		
+		return ResponseEntity.status(HttpStatus.GONE)
+							 .body(new AuthResponseDTO(ex.getMessage()));
 	}
 	
 	@ExceptionHandler(Exception.class)
