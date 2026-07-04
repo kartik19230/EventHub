@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.eventhub.auth.dto.AuthResponseDTO;
-import com.eventhub.auth.entity.UserNotVerifiedException;
 import com.eventhub.auth.exception.InvalidVerificationTokenException;
 import com.eventhub.auth.exception.UserAlreadyVerifiedException;
+import com.eventhub.auth.exception.UserNotVerifiedException;
 import com.eventhub.auth.exception.VerificationTokenExpiredException;
 
 import jakarta.mail.MessagingException;

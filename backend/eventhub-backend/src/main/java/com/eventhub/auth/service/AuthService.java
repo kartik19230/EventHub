@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.eventhub.auth.dto.AuthResponseDTO;
+import com.eventhub.auth.dto.AuthenticationResponse;
 import com.eventhub.auth.dto.LoginDTO;
 import com.eventhub.auth.dto.RegisterDTO;
 import com.eventhub.auth.dto.ResendVerificationDTO;
@@ -15,6 +16,7 @@ import com.eventhub.auth.entity.VerificationToken;
 import com.eventhub.auth.event.UserRegistrationEvent;
 import com.eventhub.auth.exception.UserAlreadyVerifiedException;
 import com.eventhub.auth.mapper.AuthMapper;
+import com.eventhub.auth.security.JwtService;
 import com.eventhub.auth.security.SecurityContextService;
 import com.eventhub.common.exception.UserAlreadyExistException;
 import com.eventhub.common.exception.UserNotFoundException;
@@ -36,8 +38,9 @@ public class AuthService {
 	private final AuthenticationManager authManager;
 	private final VerificationTokenService verificationTokenService;
 	private final ApplicationEventPublisher eventPublisher;
-	
 	private final SecurityContextService securityContextService;
+	private final JwtService jwtService;
+	
 	private final AuthMapper authMapper;
 	
 	@Transactional
@@ -62,14 +65,18 @@ public class AuthService {
 		return new AuthResponseDTO("User saved");
 	}
 	
-	public AuthResponseDTO loginUser(HttpServletRequest request,LoginDTO dto) {
+	public AuthenticationResponse loginUser(HttpServletRequest request,LoginDTO dto) {
 		
 		Authentication authentication = authManager.authenticate(
 				new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
 		
-		securityContextService.establishAuthenticationSession(authentication, request);
+	    User user = (User)authentication.getPrincipal();
+	    
+	    String token = jwtService.generateToken(user);
 		
-		return new AuthResponseDTO("Successfully Logged In");
+//		securityContextService.establishAuthenticationSession(authentication, request);
+		
+		return new AuthenticationResponse(token, "Bearer ");
 	}
 	
 	@Transactional

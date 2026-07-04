@@ -1,4 +1,4 @@
-package com.eventhub.auth.entity;
+package com.eventhub.auth.exception;
 
 public class UserNotVerifiedException extends RuntimeException{
 

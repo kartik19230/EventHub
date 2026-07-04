@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventhub.auth.dto.AuthResponseDTO;
+import com.eventhub.auth.dto.AuthenticationResponse;
 import com.eventhub.auth.dto.LoginDTO;
 import com.eventhub.auth.dto.RegisterDTO;
 import com.eventhub.auth.dto.ResendVerificationDTO;
@@ -37,9 +38,9 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDTO dto, HttpServletRequest request) {
+	public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginDTO dto, HttpServletRequest request) {
 
-		AuthResponseDTO response = authService.loginUser(request, dto);
+		AuthenticationResponse response = authService.loginUser(request, dto);
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
