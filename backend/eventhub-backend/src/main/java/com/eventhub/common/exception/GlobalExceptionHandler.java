@@ -18,7 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.eventhub.auth.dto.AuthResponseDTO;
+import com.eventhub.auth.dto.MessageResponse;
 import com.eventhub.auth.exception.InvalidVerificationTokenException;
 import com.eventhub.auth.exception.UserAlreadyVerifiedException;
 import com.eventhub.auth.exception.UserNotVerifiedException;
@@ -45,66 +45,66 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<AuthResponseDTO> handledUserAlreadyExistException(UserAlreadyExistException ex) {
+	public ResponseEntity<MessageResponse> handledUserAlreadyExistException(UserAlreadyExistException ex) {
 
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponseDTO(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<AuthResponseDTO> handledIllegalArgumentException(IllegalArgumentException ex) {
+	public ResponseEntity<MessageResponse> handledIllegalArgumentException(IllegalArgumentException ex) {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new AuthResponseDTO("Unsupported role value provided"));
+				.body(new MessageResponse("Unsupported role value provided"));
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<AuthResponseDTO> handleMessagingException(MessagingException ex) {
+	public ResponseEntity<MessageResponse> handleMessagingException(MessagingException ex) {
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(new AuthResponseDTO("Failed to send verification email"));
+				.body(new MessageResponse("Failed to send verification email"));
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<AuthResponseDTO> handleInvalidVerificationExcpetion(InvalidVerificationTokenException ex) {
+	public ResponseEntity<MessageResponse> handleInvalidVerificationExcpetion(InvalidVerificationTokenException ex) {
 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthResponseDTO(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<AuthResponseDTO> handleVerificationTokenExpiredException(
+	public ResponseEntity<MessageResponse> handleVerificationTokenExpiredException(
 			VerificationTokenExpiredException ex) {
 
-		return ResponseEntity.status(HttpStatus.GONE).body(new AuthResponseDTO(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.GONE).body(new MessageResponse(ex.getMessage()));
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<AuthResponseDTO> handleUserNotFoundException(UserNotFoundException ex) {
+	public ResponseEntity<MessageResponse> handleUserNotFoundException(UserNotFoundException ex) {
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AuthResponseDTO(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(ex.getMessage()));
 	}
 	
 	@ExceptionHandler
-	public ResponseEntity<AuthResponseDTO> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException ex) {
+	public ResponseEntity<MessageResponse> handleUserAlreadyVerifiedException(UserAlreadyVerifiedException ex) {
 
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponseDTO(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
 	}
 
 	@ExceptionHandler({ DisabledException.class })
-	public ResponseEntity<AuthResponseDTO> handleDisabledException(DisabledException ex) {
+	public ResponseEntity<MessageResponse> handleDisabledException(DisabledException ex) {
 
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponseDTO("Unverified User"));
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("Unverified User"));
 	}
 
 	@ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class, 
 		InternalAuthenticationServiceException.class})
-	public ResponseEntity<AuthResponseDTO> handleAuthenticationFailures(RuntimeException ex) {
+	public ResponseEntity<MessageResponse> handleAuthenticationFailures(RuntimeException ex) {
 
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO("Invalid Email or Password"));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid Email or Password"));
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<AuthResponseDTO> handledGeneralExcpetion(Exception ex) {
+	public ResponseEntity<MessageResponse> handledGeneralExcpetion(Exception ex) {
 
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponseDTO(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse(ex.getMessage()));
 	}
 }

@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.eventhub.auth.dto.AuthResponseDTO;
+import com.eventhub.auth.dto.MessageResponse;
 import com.eventhub.auth.dto.AuthenticationResponse;
 import com.eventhub.auth.dto.LoginDTO;
 import com.eventhub.auth.dto.RegisterDTO;
@@ -17,7 +17,6 @@ import com.eventhub.auth.event.UserRegistrationEvent;
 import com.eventhub.auth.exception.UserAlreadyVerifiedException;
 import com.eventhub.auth.mapper.AuthMapper;
 import com.eventhub.auth.security.JwtService;
-import com.eventhub.auth.security.SecurityContextService;
 import com.eventhub.common.exception.UserAlreadyExistException;
 import com.eventhub.common.exception.UserNotFoundException;
 import com.eventhub.user.entity.User;
@@ -38,13 +37,12 @@ public class AuthService {
 	private final AuthenticationManager authManager;
 	private final VerificationTokenService verificationTokenService;
 	private final ApplicationEventPublisher eventPublisher;
-	private final SecurityContextService securityContextService;
 	private final JwtService jwtService;
 	
 	private final AuthMapper authMapper;
 	
 	@Transactional
-	public AuthResponseDTO registerUser(RegisterDTO dto) throws MessagingException{
+	public MessageResponse registerUser(RegisterDTO dto) throws MessagingException{
 		
 		if (userRepo.existsByEmail(dto.email())) {
 			throw new UserAlreadyExistException("User already exist");
@@ -62,7 +60,7 @@ public class AuthService {
 		eventPublisher.publishEvent(new UserRegistrationEvent(registeredUser.getEmail(),dto.username(),
 				token.getToken()));
 		
-		return new AuthResponseDTO("User saved");
+		return new MessageResponse("User saved");
 	}
 	
 	public AuthenticationResponse loginUser(HttpServletRequest request,LoginDTO dto) {
@@ -74,13 +72,11 @@ public class AuthService {
 	    
 	    String token = jwtService.generateToken(user);
 		
-//		securityContextService.establishAuthenticationSession(authentication, request);
-		
 		return new AuthenticationResponse(token, "Bearer ");
 	}
 	
 	@Transactional
-	public AuthResponseDTO verifyUser(String token){
+	public MessageResponse verifyUser(String token){
 		
 		VerificationToken verToken = verificationTokenService.validateVerificationToken(token);
 		
@@ -92,11 +88,11 @@ public class AuthService {
 		
 		verificationTokenService.deleteVerificationToken(user);
 		
-		return new AuthResponseDTO("Email Verified Successfully");
+		return new MessageResponse("Email Verified Successfully");
 	}
 
 	@Transactional
-	public AuthResponseDTO resendVerificationToken(ResendVerificationDTO dto) {
+	public MessageResponse resendVerificationToken(ResendVerificationDTO dto) {
 		 
 		User user = userRepo.findByEmail(dto.getEmail())
 				.orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -109,6 +105,6 @@ public class AuthService {
 		
 		eventPublisher.publishEvent(new UserRegistrationEvent(user.getEmail(), user.getUsername(), token.getToken()));
 		
-		return new AuthResponseDTO("Token Resended Successfully");
+		return new MessageResponse("Token Resended Successfully");
 	}
 }

@@ -12,18 +12,47 @@ Modules represent major application-level areas that contain their own workflow,
 
 #### Service
 - AuthService
+- EmailService
+- VerificationTokenService
 
 #### Security
 - MyUserService
 - SecurityContextService
+- JwtProperites
+- JwtService
+- JwtAuthenticationFilter
+- CustomerUserDetailsService
 
 #### DTO
 - RegisterDTO
 - LoginDTO
-- AuthResponseDTO
+- MessageResponse
+- UserProfileResponse
+- AuthenticationResponse
+- ResendVerificationDTO
 
 #### Mapper
 - AuthMapper
+
+#### entity
+- VerificationToken
+
+#### Exception
+- InvalidVerificationTokenException
+- UserAlreadyVerifiedException
+- UserNotVerifiedException
+- VerificationTokenExpiredException
+
+#### Repository
+- VerificationTokenRepository
+
+#### event
+- UserRegistrationEvent
+
+#### listener
+- UserRegistrationEventListener
+
+
 
 ## 2. Features
 Features represent domain-specific areas centered around business entities and their persistence.
