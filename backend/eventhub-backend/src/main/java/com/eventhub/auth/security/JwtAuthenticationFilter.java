@@ -3,8 +3,9 @@ package com.eventhub.auth.security;
 import java.io.IOException;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	
 	private final JwtService jwtService;
-	private final UserDetailsService userDetailsService;
 	private final CustomerUserDetailsService customerUserDetailsService;
 
 	@Override
@@ -36,17 +36,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		}
 		
 		String token = authHeader.substring(7);
-		String userId = jwtService.extractSubject(token);
+		String subject = jwtService.extractSubject(token);
 		
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 		
-		User user = customerUserDetailsService.loadUserById(Integer.valueOf(userId));
+		User user = customerUserDetailsService.loadUserById(Integer.valueOf(subject));
 		
 		if (jwtService.isTokenValid(token, user)) {
+			UsernamePasswordAuthenticationToken authentication = 
+					new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 			
+			authentication.setDetails(new WebAuthenticationDetailsSource()
+					.buildDetails(request));
+			
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 		
 		filterChain.doFilter(request, response);

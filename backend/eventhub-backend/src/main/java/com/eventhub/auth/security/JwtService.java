@@ -1,6 +1,5 @@
 package com.eventhub.auth.security;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,7 +8,6 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eventhub.user.entity.User;
@@ -17,15 +15,13 @@ import com.eventhub.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
 
-	@Autowired
 	private final JwtProperties jwtProperties;
-	
-	@Autowired
 	private final SecretKey secretKey;
 	
 	private static final String ROLE_CLAIM = "role";
@@ -33,8 +29,9 @@ public class JwtService {
 	public JwtService(JwtProperties jwtProperties) {
 		
 		this.jwtProperties = jwtProperties;
-		this.secretKey = Keys.hmacShaKeyFor(
-				jwtProperties.secret().getBytes(StandardCharsets.UTF_8));
+		
+		byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secret());
+		this.secretKey = Keys.hmacShaKeyFor(keyBytes);
 	}
 	
 	public String generateToken(User user) {
@@ -100,4 +97,5 @@ public class JwtService {
 				   .parseClaimsJws(token)
 				   .getBody();
 	}
+	
 }

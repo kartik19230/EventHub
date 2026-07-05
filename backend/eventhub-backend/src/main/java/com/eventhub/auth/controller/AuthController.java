@@ -3,6 +3,7 @@ package com.eventhub.auth.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,9 @@ import com.eventhub.auth.dto.AuthenticationResponse;
 import com.eventhub.auth.dto.LoginDTO;
 import com.eventhub.auth.dto.RegisterDTO;
 import com.eventhub.auth.dto.ResendVerificationDTO;
+import com.eventhub.auth.dto.UserProfileResponse;
 import com.eventhub.auth.service.AuthService;
+import com.eventhub.user.entity.User;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,12 +66,9 @@ public class AuthController {
 	}
 
 	@GetMapping("/me")
-	public String profile(Authentication authentication) {
+	public UserProfileResponse profile(@AuthenticationPrincipal User user) {
 
-		if (authentication == null) {
-			return "authentication is null";
-		}
-		return authentication.getName();
+		return new UserProfileResponse(user.getId(),user.getEmail(),user.getRole());
 	}
 
 }

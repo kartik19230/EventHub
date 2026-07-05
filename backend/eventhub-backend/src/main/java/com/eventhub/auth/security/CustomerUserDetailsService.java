@@ -21,7 +21,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
 		User dbUser = repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-		return new CustomerUserDetails(dbUser);
+		return dbUser;
 	}
 
 	public User loadUserById(Integer id) {

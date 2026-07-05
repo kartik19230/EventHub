@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler({ DisabledException.class })
 	public ResponseEntity<AuthResponseDTO> handleDisabledException(DisabledException ex) {
 
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponseDTO(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponseDTO("Unverified User"));
 	}
 
 	@ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class, 
