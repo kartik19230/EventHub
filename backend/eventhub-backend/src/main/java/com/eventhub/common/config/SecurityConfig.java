@@ -38,7 +38,10 @@ public class SecurityConfig {
 							"/auth/register",
 							"/auth/login",
 							"/auth/verify",
-							"/auth/resend-verification"
+							"/auth/resend-verification",
+							"/v3/api-docs/**",
+							"/swagger-ui/**",
+							"/swagger-ui.html"
 							)
 						.permitAll()
 						.anyRequest()
