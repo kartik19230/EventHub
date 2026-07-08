@@ -23,6 +23,8 @@ import com.eventhub.auth.exception.InvalidVerificationTokenException;
 import com.eventhub.auth.exception.UserAlreadyVerifiedException;
 import com.eventhub.auth.exception.UserNotVerifiedException;
 import com.eventhub.auth.exception.VerificationTokenExpiredException;
+import com.eventhub.event.exception.InvalidEventScheduleException;
+import com.eventhub.event.exception.InvalidRegistrationWindowException;
 
 import jakarta.mail.MessagingException;
 
@@ -95,6 +97,17 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("Unverified User"));
 	}
 
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleInvalidRegistrationWindowException(InvalidRegistrationWindowException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleInvalidEventScheduleException(InvalidEventScheduleException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
 	@ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class, 
 		InternalAuthenticationServiceException.class})
 	public ResponseEntity<MessageResponse> handleAuthenticationFailures(RuntimeException ex) {

@@ -1,11 +1,14 @@
 package com.eventhub.event.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.eventhub.event.enums.EventCategory;
 import com.eventhub.event.enums.EventStatus;
+import com.eventhub.event.enums.EventVisibility;
 import com.eventhub.user.entity.User;
 
 import jakarta.persistence.Entity;
@@ -32,12 +35,24 @@ public class Event {
 	private String title;
 	private String description;
 	private String venue;
-	private LocalDateTime dateAndTime;
+	
+	private LocalDateTime startDateTime;
+	private LocalDateTime endDateTime;
+	private LocalDateTime registrationOpenAt;
+	private LocalDateTime registrationCloseAt;
+	
 	private Integer capacity;
-	private String bannerImgUrl;
+	private BigDecimal price;
+	private String bannerImageUrl;
 	
 	@Enumerated(EnumType.STRING)
 	private EventStatus status;
+	
+	@Enumerated(EnumType.STRING)
+	private EventCategory category;
+	
+	@Enumerated(EnumType.STRING)
+	private EventVisibility visibility;
 	
 	@CreationTimestamp
 	private LocalDateTime createdAt;
@@ -46,7 +61,6 @@ public class Event {
 	private LocalDateTime updatedAt;
 	
 	@ManyToOne
-	private User createdBy;
-	
+	private User organizer; 
 	
 }

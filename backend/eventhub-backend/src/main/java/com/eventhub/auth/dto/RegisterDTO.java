@@ -17,7 +17,7 @@ public record RegisterDTO(
 			    description = "Username",
 			    example = "Kartik Shinde"
 			)
-		String username,
+		String name,
 		
 		@NotBlank(message = "Email is Required")
 		@Email(message = "Invalid Email format")

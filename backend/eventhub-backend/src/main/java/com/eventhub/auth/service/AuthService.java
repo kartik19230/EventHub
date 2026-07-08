@@ -57,7 +57,7 @@ public class AuthService {
 		
 		VerificationToken token = verificationTokenService.createVerificationToken(user);
 		
-		eventPublisher.publishEvent(new UserRegistrationEvent(registeredUser.getEmail(),dto.username(),
+		eventPublisher.publishEvent(new UserRegistrationEvent(registeredUser.getEmail(),dto.name(),
 				token.getToken()));
 		
 		return new MessageResponse("User saved");
