@@ -2,12 +2,8 @@ package com.eventhub.common.exception;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.print.DocFlavor.READER;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.eventhub.auth.dto.MessageResponse;
 import com.eventhub.auth.exception.InvalidVerificationTokenException;
 import com.eventhub.auth.exception.UserAlreadyVerifiedException;
-import com.eventhub.auth.exception.UserNotVerifiedException;
 import com.eventhub.auth.exception.VerificationTokenExpiredException;
 import com.eventhub.event.exception.InvalidEventScheduleException;
 import com.eventhub.event.exception.InvalidRegistrationWindowException;
@@ -108,6 +103,7 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
 	}
+	
 	@ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class, 
 		InternalAuthenticationServiceException.class})
 	public ResponseEntity<MessageResponse> handleAuthenticationFailures(RuntimeException ex) {

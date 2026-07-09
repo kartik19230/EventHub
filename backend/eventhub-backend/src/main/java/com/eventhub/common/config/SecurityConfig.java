@@ -41,7 +41,8 @@ public class SecurityConfig {
 							"/auth/resend-verification",
 							"/v3/api-docs/**",
 							"/swagger-ui/**",
-							"/swagger-ui.html"
+							"/swagger-ui.html",
+							"/public-event/**"
 							)
 						.permitAll()
 						.anyRequest()

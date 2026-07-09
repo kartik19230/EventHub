@@ -1,4 +1,4 @@
-package com.eventhub.event.service;
+package com.eventhub.event.service.impl;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +11,7 @@ import com.eventhub.event.exception.InvalidEventScheduleException;
 import com.eventhub.event.exception.InvalidRegistrationWindowException;
 import com.eventhub.event.mapper.EventMapper;
 import com.eventhub.event.repository.EventRepository;
+import com.eventhub.event.service.EventService;
 import com.eventhub.user.entity.User;
 
 import jakarta.transaction.Transactional;
@@ -45,7 +46,7 @@ public class EventServiceImpl implements EventService{
 	private void validateEventSchedule(CreateEventRequest request) {
 		
 		if(!request.registrationCloseAt().isAfter(request.registrationOpenAt())) {
-			throw new InvalidRegistrationWindowException("Regitration is closing before even it starts	");
+			throw new InvalidRegistrationWindowException("Regitration is closing before even it starts");
 		}
 		
 		if (!request.endDateTime().isAfter(request.startDateTime())) {
@@ -56,6 +57,5 @@ public class EventServiceImpl implements EventService{
 			throw new InvalidRegistrationWindowException("Regitration must close before the event starts");
 		}
 	}
-
 	
 }
