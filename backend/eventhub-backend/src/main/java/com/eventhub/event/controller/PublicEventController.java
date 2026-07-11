@@ -16,13 +16,13 @@ import com.eventhub.event.service.PublicEventService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/public-event")
+@RequestMapping("/api/v1/public/event")
 @RequiredArgsConstructor
 public class PublicEventController {
 
 	private final PublicEventService publicEventService;
 	
-	@GetMapping("/event")
+	@GetMapping
 	public ResponseEntity<Page<EventSummaryResponse>> getEvent(
 			@RequestParam(required = false,defaultValue = "1") int pageNumber){
 		
@@ -31,7 +31,7 @@ public class PublicEventController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@GetMapping("/event/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<EventResponse> getEventById(@PathVariable int id){
 		
 		EventResponse response = publicEventService.viewEventDetails(id);
@@ -56,5 +56,15 @@ public class PublicEventController {
 				publicEventService.filterEvent(pageNumber, category);
 		
 		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/sort")
+	public ResponseEntity<Page<EventSummaryResponse>> sortBy(
+			@RequestParam(required = false,defaultValue ="1") int pageNumber,
+			@RequestParam(required = false,defaultValue = "none") String direction,
+			@RequestParam(required = false,defaultValue = "none") String sortField){
+		
+		//Yet to be implemented
+		return ResponseEntity.ok(null);
 	}
 }

@@ -11,8 +11,15 @@ import com.eventhub.event.enums.EventCategory;
 import com.eventhub.event.enums.EventStatus;
 import com.eventhub.event.enums.EventVisibility;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import com.eventhub.user.entity.User;
+
+
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
+	
+	Page<Event> findByOrganizer(User organizer,Pageable pageable);
 	
 	Page<Event> findByStatusAndVisibility(Pageable pageable,EventStatus status,EventVisibility visibility);
 	
@@ -21,4 +28,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 	Page<Event> findByTitleContainingAllIgnoringCaseAndStatusAndVisibility(String title,Pageable pageable,EventStatus status,EventVisibility visibility);
 	
 	Page<Event> findByCategoryAndStatusAndVisibility(EventCategory category,Pageable pageable,EventStatus status,EventVisibility visibility);
+	
+	List<Event> findByStatusAndRegistrationOpenAtLessThanEqual(EventStatus status,LocalDateTime time);
+	
+	List<Event> findByStatusAndRegistrationCloseAtLessThanEqual(EventStatus status,LocalDateTime time);
+	
+	List<Event> findByStatusAndStartDateTimeLessThanEqual(EventStatus status,LocalDateTime time);
+	
+	List<Event> findByStatusAndEndDateTimeLessThanEqual(EventStatus status, LocalDateTime time);
 }

@@ -18,6 +18,11 @@ import com.eventhub.auth.dto.MessageResponse;
 import com.eventhub.auth.exception.InvalidVerificationTokenException;
 import com.eventhub.auth.exception.UserAlreadyVerifiedException;
 import com.eventhub.auth.exception.VerificationTokenExpiredException;
+import com.eventhub.event.exception.CannotDeleteNonDraftEventException;
+import com.eventhub.event.exception.CannotModifyNonDraftEventException;
+import com.eventhub.event.exception.EventAccessDeniedException;
+import com.eventhub.event.exception.EventAlreadyPublishedException;
+import com.eventhub.event.exception.EventNotPendingForApprovalException;
 import com.eventhub.event.exception.InvalidEventScheduleException;
 import com.eventhub.event.exception.InvalidRegistrationWindowException;
 
@@ -89,19 +94,49 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler({ DisabledException.class })
 	public ResponseEntity<MessageResponse> handleDisabledException(DisabledException ex) {
 
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("Unverified User"));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Unverified User"));
 	}
 
 	@ExceptionHandler
 	public ResponseEntity<MessageResponse> handleInvalidRegistrationWindowException(InvalidRegistrationWindowException ex) {
 
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<MessageResponse> handleInvalidEventScheduleException(InvalidEventScheduleException ex) {
 
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleCannotDeleteNonDraftEventException(CannotDeleteNonDraftEventException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Cannot delete event with non draft status, Current status = " + ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleCannotModifyNonDraftEventException(CannotModifyNonDraftEventException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Cannot modify event with non draft status, Current status = " + ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleEventAlreadyPublishedException(EventAlreadyPublishedException ex) {
+
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> EventNotPendingForApprovalException(EventNotPendingForApprovalException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleEventAccessDeniedException(EventAccessDeniedException ex) {
+
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
 	}
 	
 	@ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class, 

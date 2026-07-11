@@ -79,8 +79,16 @@ public class PublicEventServiceImpl implements PublicEventService {
 		return page.map(eventMapper::toSummaryResponse);
 	}
 	
+	@Override
+	public Page<EventSummaryResponse> sortedEvent(int pageNumber, String direction, String sortField) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	private Pageable pageable(int pageNumber) {
 		
-		return PageRequest.of(pageNumber, PAGE_SIZE,Sort.by("startDateTime").ascending());
+		return PageRequest.of(pageNumber - 1, PAGE_SIZE,Sort.by("startDateTime").ascending());
 	}
+
+	
 }

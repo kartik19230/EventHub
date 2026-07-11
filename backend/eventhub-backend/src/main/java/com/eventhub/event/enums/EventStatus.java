@@ -3,10 +3,13 @@ package com.eventhub.event.enums;
 public enum EventStatus {
 	
 	DRAFT,
+	PENDING_APPROVAL,
 	PUBLISHED,
 	REGISTRATION_OPEN,
 	REGISTRATION_CLOSED,
+	ONGOING,
 	CANCELED,
-	COMPLETED
+	COMPLETED,
+	REJECTED
 
 }

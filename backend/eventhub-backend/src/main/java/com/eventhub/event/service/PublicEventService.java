@@ -15,4 +15,6 @@ public interface PublicEventService {
 	Page<EventSummaryResponse> searchEvent(int pageNumber,String title);
 	
 	Page<EventSummaryResponse> filterEvent(int pageNumber,EventCategory filter);
+	
+	Page<EventSummaryResponse> sortedEvent(int pageNumber,String direction,String sortField);
 }
