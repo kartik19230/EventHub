@@ -7,13 +7,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.eventhub.registration.entity.EventRegistration;
 import com.eventhub.event.entity.Event;
 import com.eventhub.user.entity.User;
+import java.util.List;
+import java.util.Optional;
+import com.eventhub.registration.enums.RegistrationStatus;
+
+
 
 
 public interface EventRegistrationRepository extends JpaRepository<EventRegistration, Integer> {
 
-	boolean existsByUserAndEvent(User user, Event event);
+	boolean existsByUserAndEventAndStatus(User user, Event event,RegistrationStatus status);
 	
-	long countByEvent(Event event);
+	long countByEventAndStatus(Event event, RegistrationStatus status);
 	
 	Page<EventRegistration> findByUser(User user,Pageable pageable);
+	
+	Optional<EventRegistration> findByUser(User user);
+	
+	Optional<EventRegistration> findByUserAndEventAndStatus(User user, Event event, RegistrationStatus status);
 }

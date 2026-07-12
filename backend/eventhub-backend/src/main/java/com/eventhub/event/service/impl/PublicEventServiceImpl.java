@@ -42,8 +42,7 @@ public class PublicEventServiceImpl implements PublicEventService {
 	
 	@Override
 	public Page<EventSummaryResponse> viewEventWithPagination(int pageNumber) {
-
-		System.out.println("------------------------Run--------------------------------------");
+		
 		Pageable pageable = pageable(pageNumber);
 		Page<Event> page = eventRepository.findByStatusInAndVisibility(new ArrayList<>(visibleStatuses),EventVisibility.PUBLIC,pageable);
 

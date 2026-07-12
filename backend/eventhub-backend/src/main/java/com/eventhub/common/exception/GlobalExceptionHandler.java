@@ -25,6 +25,13 @@ import com.eventhub.event.exception.EventAlreadyPublishedException;
 import com.eventhub.event.exception.EventNotPendingForApprovalException;
 import com.eventhub.event.exception.InvalidEventScheduleException;
 import com.eventhub.event.exception.InvalidRegistrationWindowException;
+import com.eventhub.registration.exception.DuplicateRegistrationException;
+import com.eventhub.registration.exception.EventCapacityExceedException;
+import com.eventhub.registration.exception.OrganizerCannotRegisterOwnEventException;
+import com.eventhub.registration.exception.RegistrationAlreadyCancelledException;
+import com.eventhub.registration.exception.RegistrationClosedException;
+import com.eventhub.registration.exception.RegistrationNotOpenException;
+import com.eventhub.registration.exception.UserNotRegisteredException;
 
 import jakarta.mail.MessagingException;
 
@@ -112,13 +119,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler
 	public ResponseEntity<MessageResponse> handleCannotDeleteNonDraftEventException(CannotDeleteNonDraftEventException ex) {
 
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Cannot delete event with non draft status, Current status = " + ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Cannot delete event with non draft status, Current status = " + ex.getMessage()));
 	}
 	
 	@ExceptionHandler
 	public ResponseEntity<MessageResponse> handleCannotModifyNonDraftEventException(CannotModifyNonDraftEventException ex) {
 
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse("Cannot modify event with non draft status, Current status = " + ex.getMessage()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Cannot modify event with non draft status, Current status = " + ex.getMessage()));
 	}
 	
 	@ExceptionHandler
@@ -135,6 +142,42 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler
 	public ResponseEntity<MessageResponse> handleEventAccessDeniedException(EventAccessDeniedException ex) {
+
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleDuplicateRegistrationException(DuplicateRegistrationException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleEventCapacityExceedException(EventCapacityExceedException ex) {
+
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleOrganizerCannotRegisterOwnEventException(OrganizerCannotRegisterOwnEventException ex) {
+
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleRegistrationNotOpenException(RegistrationNotOpenException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleRegistrationClosedException(RegistrationClosedException ex) {
+
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleUserNotRegisteredException(UserNotRegisteredException ex) {
 
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
 	}
