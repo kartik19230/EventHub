@@ -12,10 +12,9 @@ import com.eventhub.event.enums.EventStatus;
 import com.eventhub.event.enums.EventVisibility;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import com.eventhub.user.entity.User;
-
-
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 	
@@ -23,12 +22,18 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 	
 	Page<Event> findByStatusAndVisibility(Pageable pageable,EventStatus status,EventVisibility visibility);
 	
+	Page<Event> findByStatusInAndVisibility(Collection<EventStatus> statuses,EventVisibility visibility,Pageable pageable);
+	
 	Optional<Event> findByIdAndStatusAndVisibility(Integer id, EventStatus status,EventVisibility visibility);
+	
+	Optional<Event> findByIdAndStatusInAndVisibility(Integer id, Collection<EventStatus> statuses,EventVisibility visibility);
 	
 	Page<Event> findByTitleContainingAllIgnoringCaseAndStatusAndVisibility(String title,Pageable pageable,EventStatus status,EventVisibility visibility);
 	
 	Page<Event> findByCategoryAndStatusAndVisibility(EventCategory category,Pageable pageable,EventStatus status,EventVisibility visibility);
 	
+	Page<Event> findByCategoryAndStatusInAndVisibility(EventCategory category,Pageable pageable,Collection<EventStatus> statuses,EventVisibility visibility);
+
 	List<Event> findByStatusAndRegistrationOpenAtLessThanEqual(EventStatus status,LocalDateTime time);
 	
 	List<Event> findByStatusAndRegistrationCloseAtLessThanEqual(EventStatus status,LocalDateTime time);

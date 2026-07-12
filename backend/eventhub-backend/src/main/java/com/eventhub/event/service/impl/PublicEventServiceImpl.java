@@ -1,5 +1,8 @@
 package com.eventhub.event.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,29 +21,40 @@ import com.eventhub.event.repository.EventRepository;
 import com.eventhub.event.service.PublicEventService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PublicEventServiceImpl implements PublicEventService {
 
 	private final EventRepository eventRepository;
 	private final EventMapper eventMapper;
 	
 	private static final int PAGE_SIZE = 4;
-
+	
+	private static List<EventStatus> visibleStatuses = List.of(
+			EventStatus.PUBLISHED,
+		    EventStatus.REGISTRATION_OPEN,
+		    EventStatus.REGISTRATION_CLOSED,
+		    EventStatus.ONGOING,
+		    EventStatus.COMPLETED);
+	
 	@Override
 	public Page<EventSummaryResponse> viewEventWithPagination(int pageNumber) {
 
+		System.out.println("------------------------Run--------------------------------------");
 		Pageable pageable = pageable(pageNumber);
-		Page<Event> page = eventRepository.findByStatusAndVisibility(pageable,EventStatus.PUBLISHED,EventVisibility.PUBLIC);
+		Page<Event> page = eventRepository.findByStatusInAndVisibility(new ArrayList<>(visibleStatuses),EventVisibility.PUBLIC,pageable);
 
+		log.info("Statuses: {}",visibleStatuses);
 		return page.map(eventMapper::toSummaryResponse);
 	}
 
 	@Override
 	public EventResponse viewEventDetails(int eventId) {
 
-		Event event = eventRepository.findByIdAndStatusAndVisibility(eventId,EventStatus.PUBLISHED,EventVisibility.PUBLIC)
+		Event event = eventRepository.findByIdAndStatusInAndVisibility(eventId,visibleStatuses,EventVisibility.PUBLIC)
 				.orElseThrow(() -> new ResourceNotFoundException("Event not found"));
 
 		return eventMapper.toResponse(event);
@@ -53,7 +67,7 @@ public class PublicEventServiceImpl implements PublicEventService {
 		Page<Event> page;
 
 		if (title == null) {
-			page = eventRepository.findByStatusAndVisibility(pageable,EventStatus.PUBLISHED,EventVisibility.PUBLIC);
+			page = eventRepository.findByStatusInAndVisibility(visibleStatuses,EventVisibility.PUBLIC,pageable);
 		} else {
 			page = eventRepository.findByTitleContainingAllIgnoringCaseAndStatusAndVisibility(title, pageable,
 					EventStatus.PUBLISHED,EventVisibility.PUBLIC);
@@ -70,10 +84,10 @@ public class PublicEventServiceImpl implements PublicEventService {
 
 		if (category == null) {
 
-			page = eventRepository.findByStatusAndVisibility(pageable,EventStatus.PUBLISHED, EventVisibility.PUBLIC);
+			page = eventRepository.findByStatusInAndVisibility(visibleStatuses,EventVisibility.PUBLIC,pageable);
 		} else {
 
-			page = eventRepository.findByCategoryAndStatusAndVisibility(category, pageable, EventStatus.PUBLISHED,EventVisibility.PUBLIC);
+			page = eventRepository.findByCategoryAndStatusInAndVisibility(category, pageable, visibleStatuses,EventVisibility.PUBLIC);
 		}
 
 		return page.map(eventMapper::toSummaryResponse);

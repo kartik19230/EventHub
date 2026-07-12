@@ -25,7 +25,7 @@ public class PublicEventController {
 	@GetMapping
 	public ResponseEntity<Page<EventSummaryResponse>> getEvent(
 			@RequestParam(required = false,defaultValue = "1") int pageNumber){
-		
+		System.out.println("------------------------------------------------------------");
 		Page<EventSummaryResponse> response = publicEventService.viewEventWithPagination(pageNumber);
 		
 		return ResponseEntity.ok(response);

@@ -45,7 +45,7 @@ public class EventLifeCycleScheduler {
 	}
 
 	@Scheduled(fixedRate = 30000)
-	public void closeRegistration() {
+	public void closeRegistrations() {
 
 		LocalDateTime now = LocalDateTime.now();
 
