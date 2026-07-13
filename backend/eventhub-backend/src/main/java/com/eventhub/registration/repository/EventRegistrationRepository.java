@@ -7,11 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.eventhub.registration.entity.EventRegistration;
 import com.eventhub.event.entity.Event;
 import com.eventhub.user.entity.User;
-import java.util.List;
 import java.util.Optional;
 import com.eventhub.registration.enums.RegistrationStatus;
-
-
 
 
 public interface EventRegistrationRepository extends JpaRepository<EventRegistration, Integer> {
@@ -25,4 +22,6 @@ public interface EventRegistrationRepository extends JpaRepository<EventRegistra
 	Optional<EventRegistration> findByUser(User user);
 	
 	Optional<EventRegistration> findByUserAndEventAndStatus(User user, Event event, RegistrationStatus status);
+	
+	Page<EventRegistration> findByEvent(Event event, Pageable pageable);
 }

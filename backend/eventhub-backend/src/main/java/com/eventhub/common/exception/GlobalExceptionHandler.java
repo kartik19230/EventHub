@@ -28,7 +28,6 @@ import com.eventhub.event.exception.InvalidRegistrationWindowException;
 import com.eventhub.registration.exception.DuplicateRegistrationException;
 import com.eventhub.registration.exception.EventCapacityExceedException;
 import com.eventhub.registration.exception.OrganizerCannotRegisterOwnEventException;
-import com.eventhub.registration.exception.RegistrationAlreadyCancelledException;
 import com.eventhub.registration.exception.RegistrationClosedException;
 import com.eventhub.registration.exception.RegistrationNotOpenException;
 import com.eventhub.registration.exception.UserNotRegisteredException;

@@ -6,6 +6,7 @@ import com.eventhub.event.dto.request.CreateEventRequest;
 import com.eventhub.event.dto.request.UpdateEventRequest;
 import com.eventhub.event.dto.response.EventResponse;
 import com.eventhub.event.dto.response.EventSummaryResponse;
+import com.eventhub.event.dto.response.RegistrationResponse;
 
 public interface OrganizerEventService {
 
@@ -20,4 +21,6 @@ public interface OrganizerEventService {
 	void deleteEvent(Integer id);
 	
 	String submitForApproval(Integer id);
+	
+	Page<RegistrationResponse> getEventRegistrations(Integer pageNumber,Integer id);
 }

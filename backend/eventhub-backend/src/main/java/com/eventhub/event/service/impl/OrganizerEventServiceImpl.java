@@ -14,6 +14,7 @@ import com.eventhub.event.dto.request.CreateEventRequest;
 import com.eventhub.event.dto.request.UpdateEventRequest;
 import com.eventhub.event.dto.response.EventResponse;
 import com.eventhub.event.dto.response.EventSummaryResponse;
+import com.eventhub.event.dto.response.RegistrationResponse;
 import com.eventhub.event.entity.Event;
 import com.eventhub.event.enums.EventStatus;
 import com.eventhub.event.exception.CannotDeleteNonDraftEventException;
@@ -25,6 +26,8 @@ import com.eventhub.event.exception.InvalidRegistrationWindowException;
 import com.eventhub.event.mapper.EventMapper;
 import com.eventhub.event.repository.EventRepository;
 import com.eventhub.event.service.OrganizerEventService;
+import com.eventhub.registration.entity.EventRegistration;
+import com.eventhub.registration.repository.EventRegistrationRepository;
 import com.eventhub.user.entity.User;
 
 import jakarta.transaction.Transactional;
@@ -36,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 public class OrganizerEventServiceImpl implements OrganizerEventService {
 
 	private final EventRepository eventRepository;
+	private final EventRegistrationRepository eventRegistrationRepository;
 	private final EventMapper eventMapper;
 	private final CurrentUserService currentUserService;
 
@@ -44,8 +48,8 @@ public class OrganizerEventServiceImpl implements OrganizerEventService {
 	@Override
 	public EventResponse createEvent(CreateEventRequest request) {
 
-		validateEventSchedule(request.registrationOpenAt(),request.registrationCloseAt()
-				,request.startDateTime(),request.endDateTime());
+		validateEventSchedule(request.registrationOpenAt(), request.registrationCloseAt(), request.startDateTime(),
+				request.endDateTime());
 
 		User organizer = currentUserService.getCurrentuser();
 
@@ -80,8 +84,8 @@ public class OrganizerEventServiceImpl implements OrganizerEventService {
 	@Override
 	public EventResponse updateEvent(Integer id, UpdateEventRequest request) {
 
-		validateEventSchedule(request.registrationOpenAt(),request.registrationCloseAt()
-				,request.startDateTime(),request.endDateTime());
+		validateEventSchedule(request.registrationOpenAt(), request.registrationCloseAt(), request.startDateTime(),
+				request.endDateTime());
 
 		Event event = getOwnedEvent(id);
 
@@ -100,7 +104,7 @@ public class OrganizerEventServiceImpl implements OrganizerEventService {
 	public void deleteEvent(Integer id) {
 
 		Event event = getOwnedEvent(id);
-		
+
 		if (event.getStatus() != EventStatus.DRAFT) {
 			throw new CannotDeleteNonDraftEventException("Event already published");
 		}
@@ -112,19 +116,32 @@ public class OrganizerEventServiceImpl implements OrganizerEventService {
 	public String submitForApproval(Integer id) {
 
 		Event event = getOwnedEvent(id);
-		
+
 		if (event.getStatus() == EventStatus.PUBLISHED) {
 			throw new EventAlreadyPublishedException("Event already published");
-		}else if (event.getStatus() != EventStatus.DRAFT) {
+		} else if (event.getStatus() != EventStatus.DRAFT) {
 			throw new CannotModifyNonDraftEventException(event.getStatus().name());
 		}
 
 		event.setStatus(EventStatus.PENDING_APPROVAL);
-		
+
 		return event.getStatus().name();
 	}
 
-	private void validateEventSchedule(LocalDateTime regOpen, LocalDateTime regClose,LocalDateTime startDateTime,LocalDateTime endDateTime) {
+	@Override
+	public Page<RegistrationResponse> getEventRegistrations(Integer pageNumber,Integer id) {
+
+		Event event = getOwnedEvent(id);
+		
+		Pageable pageable = PageRequest.of(pageNumber - 1,10);
+		
+		Page<EventRegistration> eventRegistrations = eventRegistrationRepository.findByEvent(event, pageable);
+		
+		return eventRegistrations.map(eventMapper::getRegistrations);
+	}
+
+	private void validateEventSchedule(LocalDateTime regOpen, LocalDateTime regClose, LocalDateTime startDateTime,
+			LocalDateTime endDateTime) {
 
 		if (!regClose.isAfter(regOpen)) {
 			throw new InvalidRegistrationWindowException("Regitration is closing before even it starts");
@@ -141,18 +158,18 @@ public class OrganizerEventServiceImpl implements OrganizerEventService {
 	}
 
 	private Event getOwnedEvent(Integer id) {
-		
+
 		User currentUser = currentUserService.getCurrentuser();
-		
+
 		Event event = eventRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Event not found Exception"));
-		
+
 		if (!event.getOrganizer().getId().equals(currentUser.getId())) {
 			throw new EventAccessDeniedException("Unauthorized Access");
 		}
-		
+
 		return event;
-			
+
 	}
 
 	private Pageable pageable(int pageNumber) {

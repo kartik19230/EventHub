@@ -9,6 +9,7 @@ import com.eventhub.event.dto.request.CreateEventRequest;
 import com.eventhub.event.dto.request.UpdateEventRequest;
 import com.eventhub.event.dto.response.EventResponse;
 import com.eventhub.event.dto.response.EventSummaryResponse;
+import com.eventhub.event.dto.response.RegistrationResponse;
 import com.eventhub.event.service.OrganizerEventService;
 
 import jakarta.validation.Valid;
@@ -79,5 +80,14 @@ public class OrganizerEventController {
 		
 		String status = organizerEventService.submitForApproval(id);
 		return ResponseEntity.ok(new MessageResponse("Event submitted for publishing, current status : " + status));
+	}
+	
+	@GetMapping("/{id}/registrations")
+	public ResponseEntity<Page<RegistrationResponse>> 
+					getRegistrations(@RequestParam(required = false, defaultValue = "1") Integer pageNumber,
+							@PathVariable Integer id){
+		
+		Page<RegistrationResponse> response = organizerEventService.getEventRegistrations(pageNumber, id);
+		return ResponseEntity.ok(response);
 	}
 }
