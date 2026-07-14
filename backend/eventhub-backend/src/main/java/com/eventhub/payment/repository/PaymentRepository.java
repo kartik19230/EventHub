@@ -13,4 +13,6 @@ import com.eventhub.registration.entity.EventRegistration;
 public interface PaymentRepository extends JpaRepository<Payment, Long>{
 
 	Optional<Payment> findByRegistration(EventRegistration registration);
+	
+	boolean existsByRegistration(EventRegistration registration);
 }

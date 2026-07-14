@@ -16,6 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Payment {
 	private Long id;
 	
 	@OneToOne
+	@JoinColumn(nullable = false,unique = true)
 	private EventRegistration registration;
 	
 	private BigDecimal amount;
