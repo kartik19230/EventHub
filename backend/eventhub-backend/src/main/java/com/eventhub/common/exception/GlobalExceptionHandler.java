@@ -25,6 +25,10 @@ import com.eventhub.event.exception.EventAlreadyPublishedException;
 import com.eventhub.event.exception.EventNotPendingForApprovalException;
 import com.eventhub.event.exception.InvalidEventScheduleException;
 import com.eventhub.event.exception.InvalidRegistrationWindowException;
+import com.eventhub.payment.exception.PaymentAlreadyCompletedException;
+import com.eventhub.payment.exception.PaymentNotFoundException;
+import com.eventhub.payment.exception.RegistrationNotFoundException;
+import com.eventhub.payment.exception.UnauthorizedPaymentAccessException;
 import com.eventhub.registration.exception.DuplicateRegistrationException;
 import com.eventhub.registration.exception.EventCapacityExceedException;
 import com.eventhub.registration.exception.OrganizerCannotRegisterOwnEventException;
@@ -178,6 +182,30 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler
 	public ResponseEntity<MessageResponse> handleUserNotRegisteredException(UserNotRegisteredException ex) {
 
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handlePaymentAlreadyCompletedException(PaymentAlreadyCompletedException ex){
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handlePaymentNotFoundException(PaymentNotFoundException ex){
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleRegistrationNotFoundException(RegistrationNotFoundException ex){
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleUnauthorizedPaymentAccessException(UnauthorizedPaymentAccessException ex){
+		
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
 	}
 	
