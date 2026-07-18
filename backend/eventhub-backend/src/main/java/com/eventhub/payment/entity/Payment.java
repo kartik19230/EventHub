@@ -43,7 +43,7 @@ public class Payment {
 	private PaymentMethod paymentMethod;
 	
 	@Column(unique = false)
-	private Long transcationId;
+	private String transactionId;
 	
 	private LocalDateTime paidAt;
 	

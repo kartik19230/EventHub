@@ -11,8 +11,8 @@ public record PaymentResponse (
 		Long paymentId,
 		Integer registrationId,
 		PaymentStatus status,
-		PaymentMethod method,
-		String transactionId,
-		String message){
+		PaymentMethod paymentMethod,
+		String transactionId
+		){
 
 }

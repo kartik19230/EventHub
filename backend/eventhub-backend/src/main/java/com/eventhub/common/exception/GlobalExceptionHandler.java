@@ -27,6 +27,7 @@ import com.eventhub.event.exception.InvalidEventScheduleException;
 import com.eventhub.event.exception.InvalidRegistrationWindowException;
 import com.eventhub.payment.exception.PaymentAlreadyCompletedException;
 import com.eventhub.payment.exception.PaymentNotFoundException;
+import com.eventhub.payment.exception.RegistrationCancelledException;
 import com.eventhub.payment.exception.RegistrationNotFoundException;
 import com.eventhub.payment.exception.UnauthorizedPaymentAccessException;
 import com.eventhub.registration.exception.DuplicateRegistrationException;
@@ -207,6 +208,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<MessageResponse> handleUnauthorizedPaymentAccessException(UnauthorizedPaymentAccessException ex){
 		
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleRegistrationCancelledException(RegistrationCancelledException ex){
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
 	}
 	
 	@ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class, 
