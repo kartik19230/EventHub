@@ -100,7 +100,7 @@ public class PaymentServiceImpl implements PaymentService {
 		Payment savedPayment = paymentRepository.save(payment);
 
 		if (savedPayment.getStatus() == PaymentStatus.SUCCESS) {
-			//ticketService.issueTicket(registration);
+			ticketService.issueTicket(registration);
 		}
 
 		return paymentMapper.paymentResponse(savedPayment);

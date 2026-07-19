@@ -36,6 +36,7 @@ import com.eventhub.registration.exception.OrganizerCannotRegisterOwnEventExcept
 import com.eventhub.registration.exception.RegistrationClosedException;
 import com.eventhub.registration.exception.RegistrationNotOpenException;
 import com.eventhub.registration.exception.UserNotRegisteredException;
+import com.eventhub.ticket.exception.TicketAccessDeniedException;
 
 import jakarta.mail.MessagingException;
 
@@ -214,6 +215,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<MessageResponse> handleRegistrationCancelledException(RegistrationCancelledException ex){
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<MessageResponse> handleTicketAccessDeniedException(TicketAccessDeniedException ex){
+		
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(ex.getMessage()));
 	}
 	
 	@ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class, 
