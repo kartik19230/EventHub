@@ -28,16 +28,18 @@ public class Ticket {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false,unique = true)
+	@Column(nullable = false, unique = true)
 	private String ticketNumber;
-	
-	@OneToOne
-	@JoinColumn(nullable = true,unique = true)
+
+	@OneToOne(optional = false)
+	@JoinColumn(nullable = false)
 	private EventRegistration registration;
-	
+
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private TicketStatus status;
-	
+
 	@CreationTimestamp
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 }

@@ -35,35 +35,56 @@ public class Event {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(nullable = false)
 	private String title;
+	
 	private String description;
+
+	@Column(nullable = false)
 	private String venue;
-	
-	private LocalDateTime startDateTime;
-	private LocalDateTime endDateTime;
-	private LocalDateTime registrationOpenAt;
-	private LocalDateTime registrationCloseAt;
-	
+
+	@Column(nullable = false)
 	private Integer capacity;
+
+	@Column(nullable = false)
 	private BigDecimal price;
-	private String bannerImageUrl;
-	
+
+	@Column(nullable = false)
+	private LocalDateTime startDateTime;
+
+	@Column(nullable = false)
+	private LocalDateTime endDateTime;
+
+	@Column(nullable = false)
+	private LocalDateTime registrationOpenAt;
+
+	@Column(nullable = false)
+	private LocalDateTime registrationCloseAt;
+
 	@Enumerated(EnumType.STRING)
-	private EventStatus status;
-	
-	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private EventCategory category;
-	
+
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private EventStatus status;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private EventVisibility visibility;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(nullable = false)
+	private User organizer;
 	
+	private String bannerImageUrl;
+
 	@CreationTimestamp
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
-	
+
 	@UpdateTimestamp
+	@Column(nullable = false)
 	private LocalDateTime updatedAt;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	private User organizer; 
 	
 }

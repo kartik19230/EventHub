@@ -30,24 +30,28 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne
+	@OneToOne(optional = false)
 	@JoinColumn(nullable = false,unique = true)
 	private EventRegistration registration;
 	
+	@Column(nullable = false)
 	private BigDecimal amount;
-	
+
 	@Enumerated(EnumType.STRING)
-	private PaymentStatus status;
-	
-	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private PaymentMethod paymentMethod;
-	
-	@Column(unique = false)
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private PaymentStatus status;
+
+	@Column(nullable = false, unique = true)
 	private String transactionId;
+
+	@CreationTimestamp
+	@Column(nullable = false, updatable = false)
+	private LocalDateTime createdAt;
 	
 	private LocalDateTime paidAt;
-	
-	@CreationTimestamp
-	private LocalDateTime createdAt;
 	
 }

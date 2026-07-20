@@ -8,12 +8,14 @@ import com.eventhub.event.entity.Event;
 import com.eventhub.registration.enums.RegistrationStatus;
 import com.eventhub.user.entity.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -32,16 +34,20 @@ public class EventRegistration {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@CreationTimestamp
-	private LocalDateTime registeredAt;
-	
-	@Enumerated(EnumType.STRING)
-	private RegistrationStatus status;
-	
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@JoinColumn(nullable = false)
 	private User user;
-	
-	@ManyToOne
+
+	@ManyToOne(optional = false)
+	@JoinColumn(nullable = false)
 	private Event event;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private RegistrationStatus status;
+
+	@CreationTimestamp
+	@Column(nullable = false, updatable = false)
+	private LocalDateTime registeredAt;
 	
 }

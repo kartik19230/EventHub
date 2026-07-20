@@ -38,21 +38,28 @@ public class User implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@Column(nullable = false)
 	private String name;
-	
-	@Column(unique = true)
+
+	@Column(nullable = false, unique = true)
 	private String email;
+
+	@Column(nullable = false)
 	private String password;
-	
+
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private Role role;
-	
+
+	@Column(nullable = false)
 	private Boolean isEmailVerified;
-	
+
 	@CreationTimestamp
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
-	
+
 	@UpdateTimestamp
+	@Column(nullable = false)
 	private LocalDateTime updatedAt;
 	
 	@Override

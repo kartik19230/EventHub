@@ -26,17 +26,15 @@ public class VerificationToken {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false,unique = true)
+	@Column(nullable = false, unique = true)
 	private String token;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id",
-				nullable = false,
-				unique = true)
-	private User user;
-	
+
 	@Column(nullable = false)
 	private LocalDateTime expiryDate;
+
+	@OneToOne(optional = false)
+	@JoinColumn(nullable = false, unique = true)
+	private User user;
 	
 	public VerificationToken(String token,User user,LocalDateTime expiryDate) {
 		this.token = token;
